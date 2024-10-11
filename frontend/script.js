@@ -72,7 +72,7 @@ async function loadUserAccounts() {
 
     accounts.forEach(account => {
         const li = document.createElement('li');
-        li.textContent = `Username: ${account.username}`;
+        li.textContent = `Username: ${account.username} || Password: ${account.password}`;
         userAccountsList.appendChild(li);
     });
 }
