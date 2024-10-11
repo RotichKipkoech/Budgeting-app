@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Budgeting App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <h1>Budgeting App</h1>
+
+        <!-- Role Switching Section -->
+        <div id="role-switching">
+            <h2>Switch Role</h2>
+            <button onclick="switchToUser()">User</button>
+            <button onclick="switchToAdmin()">Admin</button>
+        </div>
+
+        <!-- User Login Section -->
+        <div id="user-login" style="display: block;">
+            <h2>User Login</h2>
+            <input type="text" id="user-username" placeholder="Username" required>
+            <input type="password" id="user-password" placeholder="Password" required>
+            <button onclick="userLogin()">Login</button>
+        </div>
+
+        <!-- Admin Login Section -->
+        <div id="admin-login" style="display: none;">
+            <h2>Admin Login</h2>
+            <input type="text" id="admin-username" placeholder="Admin Username" required>
+            <input type="password" id="admin-password" placeholder="Admin Password" required>
+            <button onclick="adminLogin()">Login</button>
+        </div>
+
+        <!-- Admin Management Section -->
+        <div id="admin-management" style="display: none;">
+            <h2>Admin Management</h2>
+            <input type="text" id="new-username" placeholder="New User Username" required>
+            <input type="password" id="new-password" placeholder="New User Password" required>
+            <button onclick="createUser()">Create User Account</button>
+            <h3>User Accounts</h3>
+            <ul id="user-accounts"></ul>
+            <button onclick="logout()">Logout</button>
+        </div>
+
+        <!-- User Dashboard Section -->
+        <div id="user-dashboard" style="display: none;">
+            <h2>User Dashboard</h2>
+            <button onclick="userLogout()">Logout</button>
+            <h3>Your Budgets</h3>
+            <ul id="budgets"></ul>
+            <button onclick="addBudget()">Add Budget</button>
+        </div>
+
+        <footer>
+            <p>&copy; 2024 Budgeting App. All rights reserved.</p>
+        </footer>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
