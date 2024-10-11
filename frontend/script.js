@@ -1,4 +1,5 @@
 const apiUrl = 'http://localhost:3000/accounts';
+
 let isAdminLoggedIn = false;
 let currentUser = null;
 let isAdminMode = false;
@@ -104,31 +105,67 @@ async function loadUserBudgets() {
     const response = await fetch(`http://localhost:3000/budgets/${currentUser.username}`);
     if (response.ok) {
         const budgets = await response.json();
-        budgets.forEach(budget => {
+        budgets.forEach((budget, index) => {
             const li = document.createElement('li');
-            li.textContent = `${budget.category}: $${budget.amount}`;
+            li.textContent = `${budget.category}: $${budget.amount} (Month: ${budget.month}, Status: ${budget.status})`;
+
+            // Add an edit button
+            const editButton = document.createElement('button');
+            editButton.textContent = 'Edit';
+            editButton.onclick = () => editBudget(index);
+            li.appendChild(editButton);
+
             budgetsList.appendChild(li);
         });
     } else {
-        alert('SUCCESS.');
+        alert('No budgets found for this user.');
     }
 }
 
 async function addBudget() {
     const category = prompt("Enter budget category:");
     const amount = prompt("Enter budget amount:");
+    const month = prompt("Enter budget month:");
+    const status = "Open"; // Default status when adding
 
-    if (category && amount) {
+    if (category && amount && month) {
         const response = await fetch(`http://localhost:3000/budgets/${currentUser.username}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ category, amount: parseFloat(amount) }),
+            body: JSON.stringify({ category, amount: parseFloat(amount), month, status }),
         });
 
         if (response.ok) {
             loadUserBudgets();
         } else {
-            alert('Failed to add budget. Please ensure the amount is a number.');
+            const errorData = await response.json();
+            alert(`Failed to add budget: ${errorData.message}`);
+        }
+    }
+}
+
+async function editBudget(index) {
+    const budgetsResponse = await fetch(`http://localhost:3000/budgets/${currentUser.username}`);
+    const budgets = await budgetsResponse.json();
+
+    const budgetToEdit = budgets[index];
+    const newCategory = prompt("Edit budget category:", budgetToEdit.category);
+    const newAmount = prompt("Edit budget amount:", budgetToEdit.amount);
+    const newMonth = prompt("Edit budget month:", budgetToEdit.month);
+    const newStatus = prompt("Edit budget status (Open/Pending/Closed):", budgetToEdit.status);
+
+    if (newCategory && newAmount && newMonth && newStatus) {
+        const response = await fetch(`http://localhost:3000/budgets/${currentUser.username}/${index}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ category: newCategory, amount: parseFloat(newAmount), month: newMonth, status: newStatus }),
+        });
+
+        if (response.ok) {
+            loadUserBudgets();
+        } else {
+            const errorData = await response.json();
+            alert(`Failed to edit budget: ${errorData.message}`);
         }
     }
 }
